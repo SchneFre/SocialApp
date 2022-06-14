@@ -8,6 +8,36 @@ const useUser=()=> {
     const [allUsers ,setAllUsers]=useState([]);
     const [currentUser ,setCurrentUser]=useState({});
 
+
+    const backend_verifyWord = async (word)=> {
+      var config = {
+        method: 'put',
+        url: '/api/WordExisits',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        data: word
+      };
+      let response = await axios (config);    
+      console.log(response.data)  
+      return response.data;      
+    }
+
+    const backend_uploadImg = async (aryData) => {
+      console.log("backend_uploadImg");
+      console.log(aryData)
+      var config = {
+        method: 'post',
+        url: '/api/upload',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        data: aryData
+      };
+      let response = await axios (config);    
+      console.log(response.data)  
+      return response.data;      
+  }
     const backend_LoginIsPossible = async (userName, userPW) => {
         const json = {"userName": userName,
                       "password": userPW};
@@ -157,7 +187,7 @@ const useUser=()=> {
             let today = new Date().toISOString().slice(0, 10);
             let newUser = {id: uuidv4(), userName: userName, password: userPW, registrationDate: today,  
                           friends:[], friendRequestsSent:[], friendRequestsRecieved: [],
-                          messages:[]};
+                          messages:[], beruf: "", sprachen:[], interests:[],beziehungsstatus:"", biografie:""};
             backend_AddUser(newUser);
             setAllUsers ([...allUsers, currentUser]);    
             loginUser(userName, userPW) 
@@ -214,10 +244,21 @@ const useUser=()=> {
       }
 
 
+      const uploadImg=(imgFile) => {
+        console.log("uploadImg");
+        console.log(imgFile);
 
+        //imgFile.filename = currentUser.id + "&" + imgFile.filename
+        return backend_uploadImg (imgFile)
+      }
+
+      const verifyWord =(word) => {
+        return backend_verifyWord ({word: word});
+      }
       return [addUser, loginUser, logoutUser, currentUser, addFriendRequest, 
               acceptFriendRequest,rejectFriendRequest, sendNewMessage, loadChatVerlauf, 
-              updateMessageStatus]
+              updateMessageStatus, uploadImg, verifyWord];
+  
 }
 
 export default useUser;

@@ -31,9 +31,7 @@ const WebsocketChatroom = (props) => {
     <Grid container>
         <Grid item xs={3} >
             <List>
-                {
-                currentUser.friends.length> 0
-                ?
+              {
                 messages.map((msg)=>
                 <ListItem  key={msg.id}>  
                     {
@@ -42,7 +40,7 @@ const WebsocketChatroom = (props) => {
                     : <ListItemText align="left" primary={msg.text}>{msg.text}</ListItemText>
                     }
                 </ListItem>) 
-                : "Freunde hinzufügen, um zu chatten"}                   
+              }              
             </List>
         </Grid>
             <Grid container style={{padding: '20px'}}>

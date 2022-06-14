@@ -14,9 +14,10 @@ import Profil from './components/Profil'
 import Login from './components/inner components/Login';
 import { AppContextProvider } from './components/providers/AppContext';
 import FriendRequests from './components/FriendRequests';
-import WebsocketChat from './components/WebsocketChat';
 import EditProfil from './components/EditProfil';
 import WebsocketChatroom from "./components/WebsocketChatroom";
+import ChatSelection from './components/ChatSelection';
+
 
 function App() {
 
@@ -41,7 +42,7 @@ function App() {
               <Route path ="/login" element={<Login />} />
               <Route path="profil/:userName" element={<Profil />} />
               <Route path="/freundschaftsanfragen" element={<FriendRequests />} />
-              <Route path="/chat" element={<WebsocketChat />} />
+              <Route path="/chat" element={<ChatSelection />} />
               <Route path="/chatroom/:roomId" element={<WebsocketChatroom />}/>
               <Route path="/editProfil" element={<EditProfil />} />
             </Routes>

@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "cd backend && npm start",
+    "build": "concurrently \"cd backend && npm run dev\" \"cd frontend && npm start\"",
     "dev": "concurrently \"cd backend && npm run dev\" \"cd frontend && npm start\""
   },
   "keywords": [],
@@ -15,6 +16,7 @@
   },
   "dependencies": {
     "@mui/styles": "^5.8.0",
-    "axios": "^0.27.2"
+    "axios": "^0.27.2",
+    "react-swipeable-views": "^0.14.0"
   }
 }

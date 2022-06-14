@@ -1,10 +1,16 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const multer = require("multer");
+const {GridFsStorage} = require("multer-gridfs-storage");
 
+const checkWord = require('check-word');
+// zum einbinden der environment Variables
 require('dotenv').config()
-const uri = process.env.MONGO_URI;
 
+//zum speichern von Bildern
+const Grid = require("gridfs-stream");
 
+// HTTP Server für Chat Funktion erstellen
 const server = require("http").createServer();
 const io = require("socket.io")(server, {
   cors: {
@@ -12,12 +18,20 @@ const io = require("socket.io")(server, {
   },
 });
 
+
+const words     = checkWord('de'); // setup the language for check, default is en
+
+const uri = process.env.MONGO_URI; // auslesen der .env datei
 const app = express();
 const port = 8000;
 const PORT_CHATSERVER = 8002;
 const NEW_CHAT_MESSAGE_EVENT = "newChatMessage";
+let DBconnection;
+let gfs;
+
 
 app.use(express.json());
+
 
 const userSchema = new mongoose.Schema({
   id: String,
@@ -52,16 +66,89 @@ const conversationSchema = new mongoose.Schema({
 const ChatModel = mongoose.model("chats", conversationSchema)
 
 
+
+
+
+
+
 // Verbindung mit der MongoDB herstellen
 app.use(async function (req, res, next) {
   await mongoose.connect(uri);
   //await mongoose.connect('mongodb://localhost:27017/socialAppDB');
+  DBconnection = mongoose.connection;
+  DBconnection.once("open", function () {
+    // Dateispeichern vorbereiten
+    gfs = Grid(DBconnection.db, mongoose.mongo);
+    gfs.collection("photos");
+  });
   next();
 });
 
+// Wörter im Duden überprüfen
+app.put("/api/WordExisits", async (req, res) => {
+  console.log("get - /api/WordExisits");
+  word = req.body.word;
+  console.log(word);
+  let response = words.check(word);
+  console.log(response);
+
+  res.status(200).send(response);
+})
+
+
+// Bilder  ////////////////////////////////////////////////
+// Storage zum speichern von Bildern etc.
+// Set multer storage engine to the newly created object
+const backendStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'images/')
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname)
+  },
+})
+const backendUpload = multer({ storage: backendStorage });
+//const upload = multer({ storage });
+app.post("/api/upload", backendUpload.single("file"), async (req, res) => {
+  console.log("/api/upload");
+  console.log(req.body);
+  let currentUser = req.body[1];
+  let file = req.body[0]
+  let filename = backendUpload.fields.name; // file.name
+  
+  try {
+    if (file === undefined) return res.send("Es muss eine Datei ausgewählt werden");
+    const imgUrl = `http://localhost:8000/images/${filename}`;
+
+    return res.send(imgUrl);
+  } catch (error) {
+      res.send("Fehler beim upload");
+  }
+});
+
+app.get("/api/file/:filename", async (req, res) => {
+  try {
+      const file = await gfs.files.findOne({ filename: req.params.filename });
+      const readStream = gfs.createReadStream(file.filename);
+      readStream.pipe(res);
+  } catch (error) {
+      res.send("not found");
+  }
+});
+
+app.delete("/api/file/:filename", async (req, res) => {
+  try {
+      await gfs.files.deleteOne({ filename: req.params.filename });
+      res.send("success");
+  } catch (error) {
+      console.log(error);
+      res.send("An error occured.");
+  }
+});
+
+
 
 // Chat Server /////////////////////////////////////////////
-
 io.on("connection",  (socket) => {
   
   // Join a conversation

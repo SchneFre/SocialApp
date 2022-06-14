@@ -16,7 +16,7 @@ const AppContextProvider = ({ children }) => {
 
   const [addUser, loginUser, logoutUser, currentUser,
          addFriendRequest, acceptFriendRequest, rejectFriendRequest, 
-         sendNewMessage, loadChatVerlauf, updateMessageStatus] = useUser();
+         sendNewMessage, loadChatVerlauf, updateMessageStatus, uploadImg, verifyWord] = useUser();
 
   return (
     <AppContext.Provider value={{allPosts, setPost, addPost, delPost,  
@@ -24,7 +24,8 @@ const AppContextProvider = ({ children }) => {
                           addComment, setNewPostTitle, setNewPostDescription, allPostsOfUser,toggleLikeOfPost,
                           addUser, loginUser, logoutUser, currentUser, 
                           addFriendRequest, acceptFriendRequest, rejectFriendRequest, 
-                          filteredUserName, searchTerm, sendNewMessage, loadChatVerlauf, updateMessageStatus}}>
+                          filteredUserName, searchTerm, sendNewMessage, loadChatVerlauf, updateMessageStatus,
+                          uploadImg, verifyWord}}>
       {children}
     </AppContext.Provider>
   );
