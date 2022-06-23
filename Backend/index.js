@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const multer = require("multer");
 const {GridFsStorage} = require("multer-gridfs-storage");
+const path = require("path");
 
 const checkWord = require('check-word');
 // zum einbinden der environment Variables
@@ -30,6 +31,7 @@ let DBconnection;
 let gfs;
 
 
+app.use(express.static(path.join(__dirname, '../frontend/build/')));
 app.use(express.json());
 
 
@@ -67,7 +69,10 @@ const ChatModel = mongoose.model("chats", conversationSchema)
 
 
 
-
+app.get('/', async (req, res) => {
+  //res.send('Hello World123!');
+  res.sendFile(path.join(__dirname, "../Frontend/build/index.html"));
+});
 
 
 
@@ -228,9 +233,7 @@ app.post ('/api/previousMessages', async (req, res) => {
 })
 
 // User und Post Handling /////////////////////////////////
-app.get('/', async (req, res) => {
-  res.send('Hello World123!');
-});
+
 
 /// Users 
 app.post('/api/userExists', async  (req, res) => {
