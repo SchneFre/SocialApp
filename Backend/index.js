@@ -30,7 +30,7 @@ const NEW_CHAT_MESSAGE_EVENT = "newChatMessage";
 let DBconnection;
 let gfs;
 
-
+//aösdlkjfasdölfkj
 app.use(express.static(path.join(__dirname, '../frontend/build/')));
 app.use(express.json());
 
