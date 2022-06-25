@@ -16,7 +16,7 @@ const Grid = require("gridfs-stream");
 
 
 const words     = checkWord('de'); // setup the language for check, default is en
-
+const port = process.env.PORT || 8000;
 const uri = process.env.MONGO_URI; // auslesen der .env datei
 const app = express();
 // HTTP Server für Chat Funktion erstellen
@@ -29,8 +29,11 @@ const io = require("socket.io")(app, {
   },
 });
 */
-const io = socketIO(app);
-const port = process.env.PORT || 8000;
+const server = express()
+  .use((req, res) => res.sendFile(INDEX, { root: __dirname }))
+  .listen(port, () => console.log(`Listening on ${port}`));
+const io = socketIO(server);
+
 //const port = 8000;
 
 
