@@ -1,9 +1,9 @@
-
-const mongoose = require('mongoose');
 const express = require('express');
+const mongoose = require('mongoose');
 const multer = require("multer");
 const {GridFsStorage} = require("multer-gridfs-storage");
-const path = require("path");
+
+const path = require('path');
 
 const checkWord = require('check-word');
 // zum einbinden der environment Variables
@@ -25,14 +25,18 @@ const words     = checkWord('de'); // setup the language for check, default is e
 
 const uri = process.env.MONGO_URI; // auslesen der .env datei
 const app = express();
-const port = 8000;
+
+
+const port = process.env.PORT || 8000;
+//const port = 8000;
+
+
 const PORT_CHATSERVER = 8002;
 const NEW_CHAT_MESSAGE_EVENT = "newChatMessage";
 let DBconnection;
 let gfs;
 
-//aösdlkjfasdölfkj
-app.use(express.static(path.join(__dirname, '../frontend/build/')));
+
 app.use(express.json());
 
 
@@ -70,10 +74,7 @@ const ChatModel = mongoose.model("chats", conversationSchema)
 
 
 
-app.get('/', async (req, res) => {
-  //res.send('Hello World123!');
-  res.sendFile(path.join(__dirname, "../Frontend/build/index.html"));
-});
+
 
 
 
@@ -233,8 +234,13 @@ app.post ('/api/previousMessages', async (req, res) => {
   }
 })
 
-// User und Post Handling /////////////////////////////////
+app.use(express.static(path.join(__dirname, '../Frontend/build/')));
 
+// User und Post Handling /////////////////////////////////
+app.get('/', async (req, res) => {
+  //res.send('Hello World123!');
+  res.sendFile(path.join(__dirname, '../Frontend/build/index.html'));
+});
 
 /// Users 
 app.post('/api/userExists', async  (req, res) => {

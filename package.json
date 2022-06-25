@@ -5,14 +5,18 @@
   "main": "index.js",
   "scripts": {
     "start": "cd Backend && npm start",
-    "build": "cd Backend && npm i && cd .. && cd Frontend && npm i -f",
+    "build": "cd Backend && npm i",
     "dev": "concurrently \"cd backend && npm run dev\" \"cd frontend && npm start\""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^7.1.0"
+  },
   "dependencies": {
-    "concurrently": "^7.2.2",
-    "mongoose": "^6.4.0"
+    "@mui/styles": "^5.8.0",
+    "axios": "^0.27.2",
+    "react-swipeable-views": "^0.14.0"
   }
 }
