@@ -12,20 +12,20 @@ require('dotenv').config()
 //zum speichern von Bildern
 const Grid = require("gridfs-stream");
 
-// HTTP Server für Chat Funktion erstellen
-const server = require("http").createServer();
-const io = require("socket.io")(server, {
-  cors: {
-    origin: "*",
-  },
-});
+
 
 
 const words     = checkWord('de'); // setup the language for check, default is en
 
 const uri = process.env.MONGO_URI; // auslesen der .env datei
 const app = express();
-
+// HTTP Server für Chat Funktion erstellen
+//const server = require("http").createServer();
+const io = require("socket.io")(app, {
+  cors: {
+    origin: "*",
+  },
+});
 
 const port = process.env.PORT || 8000;
 //const port = 8000;
