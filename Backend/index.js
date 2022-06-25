@@ -21,12 +21,15 @@ const uri = process.env.MONGO_URI; // auslesen der .env datei
 const app = express();
 // HTTP Server für Chat Funktion erstellen
 //const server = require("http").createServer();
+
+/*
 const io = require("socket.io")(app, {
   cors: {
     origin: "*",
   },
 });
-
+*/
+const io = socketIO(app);
 const port = process.env.PORT || 8000;
 //const port = 8000;
 
